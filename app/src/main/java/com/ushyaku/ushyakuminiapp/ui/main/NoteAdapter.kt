@@ -9,7 +9,7 @@ import com.ushyaku.ushyakuminiapp.data.local.Note
 import com.ushyaku.ushyakuminiapp.databinding.ItemNoteBinding
 
 /**
- * Adapter class for the RecyclerView to display a list of notes.
+ * Adapter class for the RecyclerView to display a list of tasks.
  * Uses ListAdapter for efficient item updates.
  */
 class NoteAdapter(
@@ -30,11 +30,11 @@ class NoteAdapter(
     }
 
     /**
-     * ViewHolder class that holds references to the views for each note item.
+     * ViewHolder class that holds references to the views for each task item.
      */
     inner class NoteViewHolder(private val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(note: Note) {
-            // Set note title and description
+            // Set task title and description
             binding.tvTitle.text = note.noteTitle
             binding.tvContent.text = note.noteDescription
             

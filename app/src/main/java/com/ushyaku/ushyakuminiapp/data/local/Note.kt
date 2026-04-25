@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
- * Entity class representing a Note in the Room database.
+ * Entity class representing a Task in the Room database.
  */
 @Entity(tableName = "notesTable")
 data class Note(
@@ -13,9 +13,9 @@ data class Note(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     
-    // Column for the note title
+    // Column for the task title
     @ColumnInfo(name = "title") val noteTitle: String,
     
-    // Column for the note description
+    // Column for the task description
     @ColumnInfo(name = "description") val noteDescription: String,
 )

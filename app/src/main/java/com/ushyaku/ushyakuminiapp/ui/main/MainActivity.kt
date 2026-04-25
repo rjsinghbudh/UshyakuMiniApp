@@ -27,7 +27,7 @@ import com.ushyaku.ushyakuminiapp.ui.viewmodel.NoteViewModelFactory
 import androidx.core.graphics.drawable.toDrawable
 
 /**
- * The main activity of the application that displays a list of notes and allows
+ * The main activity of the application that displays a list of tasks and allows
  * users to add, edit, or delete them.
  */
 class MainActivity : AppCompatActivity() {
@@ -55,10 +55,10 @@ class MainActivity : AppCompatActivity() {
         // Initialize dependencies and ViewModel
         initialSetUp()
 
-        // Setup the RecyclerView to display notes
+        // Setup the RecyclerView to display tasks
         setupRecyclerView()
 
-        // Set up click listener for the Floating Action Button to add a new note
+        // Set up click listener for the Floating Action Button to add a new task
         binding.fabAdd.setOnClickListener { showAddDialog() }
     }
 
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         val factory = NoteViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[NoteViewModel::class.java]
 
-        // Observe the list of notes from the ViewModel
+        // Observe the list of tasks from the ViewModel
         viewModel.allNotes.observe(this) { notes->
             adapter.submitList(notes)
         }
@@ -95,12 +95,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Displays a dialog to edit an existing note.
+     * Displays a dialog to edit an existing task.
      */
     private fun showEditDialog(note: Note) {
         val dialogBinding = DialogNoteActionBinding.inflate(layoutInflater)
 
-        // Pre-fill the dialog with existing note data
+        // Pre-fill the dialog with existing task data
         dialogBinding.etNoteTitle.setText(note.noteTitle)
         dialogBinding.etDescription.setText(note.noteDescription)
 
@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
                 val updatedContent = dialogBinding.etDescription.text.toString()
 
                 if (updatedTitle.isNotEmpty() && updatedContent.isNotEmpty()) {
-                    // Update the note in the ViewModel
+                    // Update the task in the ViewModel
                     val updatedNote =
                         note.copy(noteTitle = updatedTitle, noteDescription = updatedContent)
                     viewModel.update(updatedNote)
@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Displays a dialog to add a new note.
+     * Displays a dialog to add a new task.
      */
     private fun showAddDialog() {
         val titleView = layoutInflater.inflate(R.layout.dialog_title_view, null)
@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
                 val content = dialogBinding.etDescription.text.toString()
 
                 if (title.isNotEmpty() && content.isNotEmpty()) {
-                    // Insert the new note via the ViewModel
+                    // Insert the new task via the ViewModel
                     viewModel.insert(Note(noteTitle = title, noteDescription = content))
                 } else {
                     Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()

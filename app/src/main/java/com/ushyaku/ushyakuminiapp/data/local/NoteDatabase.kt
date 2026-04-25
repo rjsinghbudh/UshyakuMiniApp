@@ -6,13 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 /**
- * Room database class to manage the local database for notes.
+ * Room database class to manage the local database for tasks.
  */
 @Database(entities = [Note::class], version = 1, exportSchema = false)
 abstract class NoteDatabase : RoomDatabase() {
 
     /**
-     * Provides access to the NotesDao.
+     * Provides access to the Tasks DAO.
      */
     abstract fun getNotesDao(): NotesDao
 

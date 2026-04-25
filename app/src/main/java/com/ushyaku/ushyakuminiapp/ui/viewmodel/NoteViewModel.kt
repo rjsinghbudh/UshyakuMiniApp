@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel for managing note data and handling UI-related logic.
+ * ViewModel for managing task data and handling UI-related logic.
  * Communicates with the repository to perform CRUD operations.
  */
 class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
@@ -21,8 +21,8 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     private val _searchQuery = MutableLiveData<String>("")
 
     /**
-     * LiveData that provides a list of notes. It switches between all notes 
-     * and filtered notes based on the search query.
+     * LiveData that provides a list of tasks. It switches between all tasks 
+     * and filtered tasks based on the search query.
      */
     val allNotes: LiveData<List<Note>> = _searchQuery.switchMap { query ->
         if (query.isNullOrEmpty()) {
@@ -33,28 +33,28 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     }
 
     /**
-     * Inserts a new note into the database using a coroutine.
+     * Inserts a new task into the database using a coroutine.
      */
     fun insert(note: Note) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(note)
     }
 
     /**
-     * Updates an existing note in the database using a coroutine.
+     * Updates an existing task in the database using a coroutine.
      */
     fun update(note: Note) = viewModelScope.launch(Dispatchers.IO) {
         repository.update(note)
     }
 
     /**
-     * Deletes a note from the database using a coroutine.
+     * Deletes a task from the database using a coroutine.
      */
     fun delete(note: Note) = viewModelScope.launch(Dispatchers.IO) {
         repository.delete(note)
     }
 
     /**
-     * Manually searches for notes (can be used for specific queries).
+     * Manually searches for tasks (can be used for specific queries).
      */
     fun searchNotes(query: String): LiveData<List<Note>> {
         return repository.searchNotes(query)

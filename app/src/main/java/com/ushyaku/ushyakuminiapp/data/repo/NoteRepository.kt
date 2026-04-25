@@ -9,32 +9,32 @@ import com.ushyaku.ushyakuminiapp.data.local.NotesDao
  */
 class NoteRepository(private val noteDao: NotesDao) {
 
-    // LiveData holding all notes from the database
+    // LiveData holding all tasks from the database
     val allNotes: LiveData<List<Note>> = noteDao.getAllNotes()
 
     /**
-     * Inserts a note into the database.
+     * Inserts a task into the database.
      */
     suspend fun insert(note: Note) {
         noteDao.insert(note)
     }
 
     /**
-     * Deletes a note from the database.
+     * Deletes a task from the database.
      */
     suspend fun delete(note: Note) {
         noteDao.delete(note)
     }
 
     /**
-     * Updates an existing note in the database.
+     * Updates an existing task in the database.
      */
     suspend fun update(note: Note) {
         noteDao.update(note)
     }
 
     /**
-     * Searches for notes based on the provided query.
+     * Searches for tasks based on the provided query.
      */
     fun searchNotes(query: String): LiveData<List<Note>> {
         return noteDao.searchNotes("%$query%")
