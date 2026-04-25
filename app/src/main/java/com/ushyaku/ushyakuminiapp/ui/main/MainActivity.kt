@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
         titleView.findViewById<ImageButton>(R.id.close_button).setOnClickListener {
             dialog.dismiss()
         }
-        titleView.findViewById<TextView>(R.id.tv_title).text = "Update Note"
+        titleView.findViewById<TextView>(R.id.tv_title).text = "Update Task"
         dialog.show()
     }
 
@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
         titleView.findViewById<ImageButton>(R.id.close_button).setOnClickListener {
             dialog.dismiss()
         }
-        titleView.findViewById<TextView>(R.id.tv_title).text = "Add New Note"
+        titleView.findViewById<TextView>(R.id.tv_title).text = "Add New Task"
 
         dialog.show()
     }
