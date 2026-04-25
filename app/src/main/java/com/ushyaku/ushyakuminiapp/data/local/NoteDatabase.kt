@@ -5,15 +5,27 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
+/**
+ * Room database class to manage the local database for notes.
+ */
 @Database(entities = [Note::class], version = 1, exportSchema = false)
 abstract class NoteDatabase : RoomDatabase() {
 
+    /**
+     * Provides access to the NotesDao.
+     */
     abstract fun getNotesDao(): NotesDao
+
     companion object {
+        // Singleton instance of the NoteDatabase
         @Volatile
         private var INSTANCE: NoteDatabase? = null
 
+        /**
+         * Gets the singleton instance of the NoteDatabase.
+         */
         fun getDatabase(context: Context): NoteDatabase {
+            // If INSTANCE is not null, return it; otherwise, create it in a thread-safe manner
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
