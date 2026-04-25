@@ -6,9 +6,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/note_icon"
+        android:icon="@drawable/task_icon"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/note_icon"
+        android:roundIcon="@drawable/task_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.UshyakuMiniApp">
         <activity

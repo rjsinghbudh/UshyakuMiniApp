@@ -1,13 +1,12 @@
 package com.ushyaku.ushyakuminiapp.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import com.ushyaku.ushyakuminiapp.data.local.Note
-import com.ushyaku.ushyakuminiapp.data.repo.NoteRepository
+import com.ushyaku.ushyakuminiapp.data.local.TaskEntity
+import com.ushyaku.ushyakuminiapp.data.repo.TaskRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -15,7 +14,7 @@ import kotlinx.coroutines.launch
  * ViewModel for managing task data and handling UI-related logic.
  * Communicates with the repository to perform CRUD operations.
  */
-class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
+class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
 
     // Internal MutableLiveData to hold the current search query
     private val _searchQuery = MutableLiveData<String>("")
@@ -24,44 +23,37 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
      * LiveData that provides a list of tasks. It switches between all tasks 
      * and filtered tasks based on the search query.
      */
-    val allNotes: LiveData<List<Note>> = _searchQuery.switchMap { query ->
+    val tasks: LiveData<List<TaskEntity>> = _searchQuery.switchMap { query ->
         if (query.isNullOrEmpty()) {
-            repository.allNotes
+            repository.tasks
         } else {
-            repository.searchNotes(query)
+            repository.searchTasks(query)
         }
     }
 
     /**
      * Inserts a new task into the database using a coroutine.
      */
-    fun insert(note: Note) = viewModelScope.launch(Dispatchers.IO) {
-        repository.insert(note)
+    fun insert(taskEntity: TaskEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.insert(taskEntity)
     }
 
     /**
      * Updates an existing task in the database using a coroutine.
      */
-    fun update(note: Note) = viewModelScope.launch(Dispatchers.IO) {
-        repository.update(note)
+    fun update(taskEntity: TaskEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.update(taskEntity)
     }
 
     /**
      * Deletes a task from the database using a coroutine.
      */
-    fun delete(note: Note) = viewModelScope.launch(Dispatchers.IO) {
-        repository.delete(note)
+    fun delete(taskEntity: TaskEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.delete(taskEntity)
     }
 
     /**
-     * Manually searches for tasks (can be used for specific queries).
-     */
-    fun searchNotes(query: String): LiveData<List<Note>> {
-        return repository.searchNotes(query)
-    }
-
-    /**
-     * Updates the search query, which triggers the allNotes LiveData to refresh.
+     * Updates the search query, which triggers the all Tasks LiveData to refresh.
      */
     fun setSearchQuery(query: String) {
         _searchQuery.value = query

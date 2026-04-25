@@ -1,7 +1,5 @@
 package com.ushyaku.ushyakuminiapp.ui.main
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,13 +15,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ushyaku.ushyakuminiapp.R
-import com.ushyaku.ushyakuminiapp.data.local.Note
-import com.ushyaku.ushyakuminiapp.data.local.NoteDatabase
-import com.ushyaku.ushyakuminiapp.data.repo.NoteRepository
+import com.ushyaku.ushyakuminiapp.data.local.TaskEntity
+import com.ushyaku.ushyakuminiapp.data.local.TaskDatabase
+import com.ushyaku.ushyakuminiapp.data.repo.TaskRepository
 import com.ushyaku.ushyakuminiapp.databinding.ActivityMainBinding
-import com.ushyaku.ushyakuminiapp.databinding.DialogNoteActionBinding
-import com.ushyaku.ushyakuminiapp.ui.viewmodel.NoteViewModel
-import com.ushyaku.ushyakuminiapp.ui.viewmodel.NoteViewModelFactory
+import com.ushyaku.ushyakuminiapp.databinding.DialogTaskActionBinding
+import com.ushyaku.ushyakuminiapp.ui.viewmodel.TaskViewModel
+import com.ushyaku.ushyakuminiapp.ui.viewmodel.TaskViewModelFactory
 import androidx.core.graphics.drawable.toDrawable
 
 /**
@@ -32,8 +30,8 @@ import androidx.core.graphics.drawable.toDrawable
  */
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var adapter: NoteAdapter
-    private lateinit var viewModel: NoteViewModel
+    private lateinit var adapter: TaskAdapter
+    private lateinit var viewModel: TaskViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
 
         // Set up click listener for the Floating Action Button to add a new task
-        binding.fabAdd.setOnClickListener { showAddDialog() }
+        binding.fabAddTask.setOnClickListener { showAddDialog() }
     }
 
     /**
@@ -67,17 +65,17 @@ class MainActivity : AppCompatActivity() {
      * Also sets up observers and search functionality.
      */
     private fun initialSetUp() {
-        val database = NoteDatabase.getDatabase(this)
-        val noteDao = database.getNotesDao()
-        val repository = NoteRepository(noteDao)
+        val database = TaskDatabase.getDatabase(this)
+        val taskDao = database.taskDao()
+        val repository = TaskRepository(taskDao)
 
         // ViewModel initialization using a factory
-        val factory = NoteViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory)[NoteViewModel::class.java]
+        val factory = TaskViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[TaskViewModel::class.java]
 
         // Observe the list of tasks from the ViewModel
-        viewModel.allNotes.observe(this) { notes->
-            adapter.submitList(notes)
+        viewModel.tasks.observe(this) { tasks->
+            adapter.submitList(tasks)
         }
 
         // Add a text watcher to the search field for real-time filtering
@@ -97,12 +95,12 @@ class MainActivity : AppCompatActivity() {
     /**
      * Displays a dialog to edit an existing task.
      */
-    private fun showEditDialog(note: Note) {
-        val dialogBinding = DialogNoteActionBinding.inflate(layoutInflater)
+    private fun showEditDialog(taskEntity: TaskEntity) {
+        val dialogBinding = DialogTaskActionBinding.inflate(layoutInflater)
 
         // Pre-fill the dialog with existing task data
-        dialogBinding.etNoteTitle.setText(note.noteTitle)
-        dialogBinding.etDescription.setText(note.noteDescription)
+        dialogBinding.etTaskTitle.setText(taskEntity.title)
+        dialogBinding.etDescription.setText(taskEntity.description)
 
         val titleView = layoutInflater.inflate(R.layout.dialog_title_view, null)
 
@@ -110,14 +108,14 @@ class MainActivity : AppCompatActivity() {
             .setCustomTitle(titleView)
             .setView(dialogBinding.root)
             .setPositiveButton("Update") { _, _ ->
-                val updatedTitle = dialogBinding.etNoteTitle.text.toString()
+                val updatedTitle = dialogBinding.etTaskTitle.text.toString()
                 val updatedContent = dialogBinding.etDescription.text.toString()
 
                 if (updatedTitle.isNotEmpty() && updatedContent.isNotEmpty()) {
                     // Update the task in the ViewModel
-                    val updatedNote =
-                        note.copy(noteTitle = updatedTitle, noteDescription = updatedContent)
-                    viewModel.update(updatedNote)
+                    val updatedTask =
+                        taskEntity.copy(title = updatedTitle, description = updatedContent)
+                    viewModel.update(updatedTask)
                 } else {
                     Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
                 }
@@ -143,18 +141,18 @@ class MainActivity : AppCompatActivity() {
      */
     private fun showAddDialog() {
         val titleView = layoutInflater.inflate(R.layout.dialog_title_view, null)
-        val dialogBinding = DialogNoteActionBinding.inflate(layoutInflater)
+        val dialogBinding = DialogTaskActionBinding.inflate(layoutInflater)
 
         val dialog = AlertDialog.Builder(this)
             .setCustomTitle(titleView)
             .setView(dialogBinding.root)
             .setPositiveButton("Save") { _, _ ->
-                val title = dialogBinding.etNoteTitle.text.toString()
+                val title = dialogBinding.etTaskTitle.text.toString()
                 val content = dialogBinding.etDescription.text.toString()
 
                 if (title.isNotEmpty() && content.isNotEmpty()) {
                     // Insert the new task via the ViewModel
-                    viewModel.insert(Note(noteTitle = title, noteDescription = content))
+                    viewModel.insert(TaskEntity(title = title, description = content))
                 } else {
                     Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
                 }
@@ -179,13 +177,13 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setupRecyclerView() {
         // Initialize the adapter with callback functions for edit and delete actions
-        adapter = NoteAdapter(
-            onEdit = { note -> showEditDialog(note) },
-            onDelete = { note -> viewModel.delete(note) }
+        adapter = TaskAdapter(
+            onEdit = { task -> showEditDialog(task) },
+            onDelete = { task -> viewModel.delete(task) }
         )
 
         // Attach the adapter and layout manager
-        binding.rvNotes.apply {
+        binding.rvTasks.apply {
             adapter = this@MainActivity.adapter
             layoutManager = LinearLayoutManager(this@MainActivity)
             setHasFixedSize(true)

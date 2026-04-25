@@ -9,7 +9,7 @@
     android:paddingBottom="10dp">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_note_title"
+        android:id="@+id/til_task_title"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_note_title"
+            android:id="@+id/et_task_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"

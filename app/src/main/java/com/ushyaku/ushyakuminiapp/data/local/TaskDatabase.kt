@@ -8,29 +8,29 @@ import androidx.room.RoomDatabase
 /**
  * Room database class to manage the local database for tasks.
  */
-@Database(entities = [Note::class], version = 1, exportSchema = false)
-abstract class NoteDatabase : RoomDatabase() {
+@Database(entities = [TaskEntity::class], version = 1, exportSchema = false)
+abstract class TaskDatabase : RoomDatabase() {
 
     /**
      * Provides access to the Tasks DAO.
      */
-    abstract fun getNotesDao(): NotesDao
+    abstract fun taskDao(): TaskDao
 
     companion object {
-        // Singleton instance of the NoteDatabase
+        // Singleton instance of the TaskDatabase
         @Volatile
-        private var INSTANCE: NoteDatabase? = null
+        private var INSTANCE: TaskDatabase? = null
 
         /**
-         * Gets the singleton instance of the NoteDatabase.
+         * Gets the singleton instance of the TaskDatabase.
          */
-        fun getDatabase(context: Context): NoteDatabase {
+        fun getDatabase(context: Context): TaskDatabase {
             // If INSTANCE is not null, return it; otherwise, create it in a thread-safe manner
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    NoteDatabase::class.java,
-                    "note_database"
+                    TaskDatabase::class.java,
+                    "task_database"
                 ).build()
                 INSTANCE = instance
 
